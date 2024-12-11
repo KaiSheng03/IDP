@@ -2,15 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'pages/home_screen.dart';
 import 'pages/register_screen.dart';
+import 'pages/state/user_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-  // final storage = FirebaseStorage.instance;
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  final storage = FirebaseStorage.instance;
+  runApp(ChangeNotifierProvider(
+    create: (_) => UserProvider(),
+    child: const MyApp(),
+  ));
+  // const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -36,10 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> login() async {
-    print("here");
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final response = await http.post(
       Uri.parse(
-          'http://192.168.1.10:3000/login'), // Replace with your server address
+          'http://192.168.27.146:3000/login'), // Replace with your server address
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'name': usernameController.text,
@@ -47,13 +55,17 @@ class _LoginScreenState extends State<LoginScreen> {
       }),
     );
 
+    // Login Successfully
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
+      userProvider.setUserInfo(data['user']); // Save user info globally
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(data['message'])));
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    } else if (response.statusCode == 401) {
+    }
+    // Login failed
+    else if (response.statusCode == 401) {
       final data = json.decode(response.body);
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(data['message'])));
