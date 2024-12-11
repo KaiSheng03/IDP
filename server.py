@@ -84,10 +84,52 @@ def predict():
             output_data = interpreter.get_tensor(output_details[0]['index'])
 
         result = output_data.tolist()  # Convert to a list for JSON serialization
+        print(result)
         return jsonify({'prediction': result})
 
     except Exception as e:
         return jsonify({'error': f'Error processing image: {str(e)}'}), 500
+
+
+@app.route('/get-patient', methods=['GET'])
+def getPatient():
+    doctor_id = request.args.get('doctor_id')  # Get doctor_id from query params
+    if doctor_id is None:
+        return jsonify({'message': 'Doctor ID is required'}), 400
+    
+    try:
+        query = 'SELECT * FROM patient WHERE doctor = %s'
+        cursor.execute(query, (doctor_id,))
+        patients = cursor.fetchall()
+
+        if not patients:
+            return jsonify({'message': 'No patients found'}), 404
+        
+        for patient in patients:
+            patient['ic'] = int(patient['ic'])
+            patient['age'] = int(patient['age'])
+
+        return jsonify(patients)
+
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+@app.route('/add-patient', methods=['POST'])
+def addPatient():
+    data = request.json
+    name = data['name']
+    patient_ic = data['ic']
+    age = data['age']
+    phone = data['phone']
+    email = data['email']
+    doctor = data['doctor']
+    query = '''
+        INSERT INTO patient (name, age, ic, email, phone_number, doctor)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        '''
+    cursor.execute(query, (name, age, patient_ic, email, phone, doctor))
+    db.commit()
+    return jsonify({'message': 'Patient added successfully'}), 201
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000, debug=True, threaded=True)  # Enable threading
