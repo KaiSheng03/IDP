@@ -42,7 +42,12 @@ class _AnalyzeState extends State<Analyze> {
             const SizedBox(height: 10),
             widget.data == null
                 ? const Text("No Image to be analyzed")
-                : Image.file(widget.data!),
+                : Image.file(
+                    widget.data!,
+                    width: 500,
+                    height: 300,
+                    fit: BoxFit.contain,
+                  ),
           ],
         ),
       ),
@@ -59,7 +64,7 @@ class _AnalyzeState extends State<Analyze> {
 
     try {
       final uri = Uri.parse(
-          'http://192.168.1.10:3000/predict'); // Replace with your server's address
+          'http://192.168.27.146:3000/predict'); // Replace with your server's address
       var request = http.MultipartRequest('POST', uri);
 
       var imageFile =
@@ -81,7 +86,7 @@ class _AnalyzeState extends State<Analyze> {
           // Access the first element if it is also a List
           final innerList = predictionList[0];
           if (innerList is List && innerList.isNotEmpty) {
-            final prediction = innerList[0]; // Access the first value
+            final prediction = innerList[0] * 100; // Access the first value
             Navigator.push(
               context,
               MaterialPageRoute(

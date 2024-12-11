@@ -1,15 +1,16 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
-import 'login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'analyze.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ImagePick extends StatefulWidget {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // final storage = FirebaseStorage.instance;
   @override
   State<ImagePick> createState() => _ImagePickState();
 }
@@ -156,7 +157,7 @@ class _ImagePickState extends State<ImagePick> {
 
     try {
       final uri = Uri.parse(
-          'http://10.0.2.2:3000/predict'); // Replace with your server address
+          'http://192.168.27.146/predict'); // Replace with your server address
       var request = http.MultipartRequest('POST', uri);
 
       // Attach the selected image file
@@ -186,34 +187,34 @@ class _ImagePickState extends State<ImagePick> {
   }
 
   // Backend code
-  // Future<void> _uploadImageToCloud() async {
-  //   if (_selectedImage == null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text("No image selected")),
-  //     );
-  //     return;
-  //   }
+  Future<void> _uploadImageToCloud() async {
+    if (_selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("No image selected")),
+      );
+      return;
+    }
 
-  //   try {
-  //     // Create a reference to the storage bucket
-  //     final storageRef = FirebaseStorage.instance
-  //         .ref()
-  //         .child('uploads/${DateTime.now().millisecondsSinceEpoch}.jpg');
+    try {
+      // Create a reference to the storage bucket
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('uploads/${DateTime.now().millisecondsSinceEpoch}.jpg');
 
-  //     // Upload the file
-  //     final uploadTask = storageRef.putFile(_selectedImage!);
+      // Upload the file
+      final uploadTask = storageRef.putFile(_selectedImage!);
 
-  //     // Monitor the upload and show progress or errors
-  //     await uploadTask.whenComplete(() async {
-  //       final downloadUrl = await storageRef.getDownloadURL();
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("Upload successful! URL: $downloadUrl")),
-  //       );
-  //     });
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Failed to upload: $e")),
-  //     );
-  //   }
-  // }
+      // Monitor the upload and show progress or errors
+      await uploadTask.whenComplete(() async {
+        final downloadUrl = await storageRef.getDownloadURL();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Upload successful! URL: $downloadUrl")),
+        );
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to upload: $e")),
+      );
+    }
+  }
 }

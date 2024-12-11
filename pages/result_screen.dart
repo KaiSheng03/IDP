@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'patient_selection.dart';
 
 class ResultScreen extends StatelessWidget {
   final String prediction;
@@ -29,11 +30,11 @@ class ResultScreen extends StatelessWidget {
             // Display the image using Image.file
             Image.file(
               File(image),
-              // height: 250,
-              // width: 250,
-              fit: BoxFit.cover,
+              height: 300,
+              width: 500,
+              fit: BoxFit.contain,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
 
             Text(
               'Malignancy:',
@@ -75,6 +76,28 @@ class ResultScreen extends StatelessWidget {
               ),
               child: const Text('Take Another Image',
                   style: TextStyle(fontSize: 16)),
+            ),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PatientSelectionScreen(
+                      imagePath: image,
+                      prediction: prediction,
+                    ),
+                  ),
+                ); // Navigate back
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber[300],
+                foregroundColor: Colors.black87,
+              ),
+              child:
+                  const Text('Pick A Patient', style: TextStyle(fontSize: 16)),
             ),
           ],
         ),

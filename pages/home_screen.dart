@@ -1,98 +1,93 @@
 import 'package:flutter/material.dart';
 import 'patient_list_screen.dart';
 import 'image_picker.dart';
+import 'state/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final userInfo = Provider.of<UserProvider>(context).userInfo;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Skinalyze'),
+        title: Text('Wekcome, ${userInfo?['name']}'),
+        backgroundColor: Colors.amber[200],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      backgroundColor: const Color.fromARGB(255, 255, 254, 250),
+      body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // First button
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  // Navigate to the AI analysing screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ImagePick()),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.blue[100], //background color
-                      borderRadius: BorderRadius.circular(16.0)),
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
+            GestureDetector(
+              onTap: () {
+                // Navigate to the AI analysing screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ImagePick()),
+                );
+              },
+              child: Container(
+                height: 250, //Set box height
+                width: 250, //Set box width
+                decoration: BoxDecoration(
+                  color: Colors.amber[100], //background color
+                  borderRadius: BorderRadius.circular(16.0), //Round corners
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/dermatoscope_icon.png', // Replace with your image
+                      height: 120,
+                      width: 120,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/dermatoscope_icon.png', // Replace with your image
-                          height: 100,
-                          width: 100,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'Image Analysis AI Assistance',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                    SizedBox(height: 8), // Space between image and text
+                    Text(
+                      'AI Dermatoscopy',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
-            SizedBox(height: 16),
+
+            SizedBox(height: 25),
 
             // Second button
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  // Navigate to the patient list screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PatientsListScreen()),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.blue[100], //background color
-                      borderRadius: BorderRadius.circular(16.0)),
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
+            GestureDetector(
+              onTap: () {
+                // Navigate to the AI analysing screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PatientsListScreen()),
+                );
+              },
+              child: Container(
+                height: 250, //Set box height
+                width: 250, //Set box width
+                decoration: BoxDecoration(
+                  color: Colors.amber[100], //background color
+                  borderRadius: BorderRadius.circular(16.0), //Round corners
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/EHR_icon.png', // Replace with your image
+                      height: 120,
+                      width: 120,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/EHR_icon.png', // Replace with your image
-                          height: 100,
-                          width: 100,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'Patient Medical Record',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                    SizedBox(height: 8), // Space between image and text
+                    Text(
+                      'Patient Medical Record',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),

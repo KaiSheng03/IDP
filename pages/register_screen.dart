@@ -18,7 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> addUser() async {
     final response = await http.post(
       Uri.parse(
-          'http://10.0.2.2:3000/addUser'), // Replace with your server address
+          'http://192.168.27.146:3000/addUser'), // Replace with your server address
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'name': usernameController.text,
